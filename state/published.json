@@ -1,6 +1,19 @@
 {
-  "publishedDates": {},
-  "publishedPostIds": [],
-  "lastRun": null
+  "publishedDates": {
+    "2026-10-17": {
+      "postId": "postkina-ai-1792216908711",
+      "videoId": "1114965147786052",
+      "facebookUrl": "https://www.facebook.com/reel/1114965147786052",
+      "publishedAt": "2026-10-17T21:18:04.242Z"
+    }
+  },
+  "publishedPostIds": [
+    "postkina-ai-1792216908711"
+  ],
+  "lastRun": {
+    "postId": "postkina-ai-1792216908711",
+    "videoId": "1114965147786052",
+    "facebookUrl": "https://www.facebook.com/reel/1114965147786052",
+    "publishedAt": "2026-10-17T21:18:04.242Z"
+  }
 }
-
