@@ -23,6 +23,7 @@ concurrency:
 
 jobs:
   create-and-publish:
+    if: ${{ github.event_name == 'workflow_dispatch' || vars.REELS_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:

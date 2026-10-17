@@ -19,6 +19,8 @@ Open **Settings → Secrets and variables → Actions → New repository secret*
 1. `REELS_FACEBOOK_PAGE_ACCESS_TOKEN` — Page access token with permission to create Page content.
 2. `REELS_GEMINI_API_KEY` — a separate Gemini key for Reel copy. This is optional because a safe non-AI fallback is included.
 
+After the Facebook token is saved and a manual publish test succeeds, add the repository variable `REELS_ENABLED` with value `true`. Scheduled runs stay safely disabled until this variable exists.
+
 ## Run manually
 
 Open **Actions → Daily USA Reel → Run workflow**. Manual runs default to `force: true`.
