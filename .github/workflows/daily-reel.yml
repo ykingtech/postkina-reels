@@ -30,10 +30,10 @@ jobs:
       POSTKINA_API_URL: https://postkina-facebook-publisher.whatthewithyking.workers.dev/?posts=1&limit=30
       REEL_TIME_ZONE: America/New_York
       REEL_TARGET_HOUR: "20"
-      GRAPH_API_VERSION: v26.0
       GEMINI_MODEL: gemini-2.5-flash
       GEMINI_API_KEY: ${{ secrets.REELS_GEMINI_API_KEY }}
-      FACEBOOK_PAGE_ACCESS_TOKEN: ${{ secrets.REELS_FACEBOOK_PAGE_ACCESS_TOKEN }}
+      POSTKINA_PUBLISHER_URL: https://postkina-facebook-publisher.whatthewithyking.workers.dev/
+      REELS_WORKFLOW_SECRET: ${{ secrets.REELS_WORKFLOW_SECRET }}
       FORCE_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.force || 'false' }}
       ALLOW_PUBLISH: ${{ github.event_name == 'schedule' || inputs.publish }}
       GH_TOKEN: ${{ github.token }}

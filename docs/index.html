@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="PostKina Reels publishing dashboard">
+  <meta name="robots" content="noindex,nofollow">
+  <title>PostKina Reels Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="https://www.postkina.online/" target="_blank" rel="noopener">
+        <img src="https://www.postkina.online/assets/postkina-logo.png" alt="PostKina">
+        <span>Reels Studio</span>
+      </a>
+      <div class="account-actions">
+        <span id="accountLabel" class="account-label">Admin sign-in required to publish</span>
+        <button id="authButton" class="button button-ghost" type="button">Sign in with Google</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">POSTKINA · DAILY VIDEO DESK</p>
+          <h1>One story.<br><span>One sharp Reel.</span></h1>
+          <p class="hero-text">Turn a fresh PostKina story into a vertical Facebook Reel, publish it on demand, and keep the daily US schedule visible in one place.</p>
+          <div class="hero-actions">
+            <button id="publishButton" class="button button-primary" type="button" disabled>
+              <span>Generate &amp; publish now</span><span aria-hidden="true">↗</span>
+            </button>
+            <a class="button button-secondary" href="https://github.com/ykingtech/postkina-reels/actions/workflows/daily-reel.yml" target="_blank" rel="noopener">View workflow</a>
+          </div>
+          <p id="actionMessage" class="action-message" aria-live="polite"></p>
+        </div>
+        <aside class="countdown-card">
+          <div class="live-label"><span></span> NEXT AUTOMATIC RUN</div>
+          <div id="countdown" class="countdown">--:--:--</div>
+          <p id="scheduleLabel">Loading the US publishing schedule…</p>
+          <div class="timezone-row"><span>Audience clock</span><strong id="audienceClock">--:--</strong></div>
+        </aside>
+      </section>
+
+      <section class="status-grid" aria-label="Reels publishing status">
+        <article class="metric-card">
+          <span class="metric-label">Pipeline</span>
+          <strong id="pipelineStatus" class="status-pill status-neutral">Loading</strong>
+          <p id="pipelineDetail">Reading publisher status…</p>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Publishing rhythm</span>
+          <strong>Daily</strong>
+          <p>8:15 PM America/New_York</p>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Video format</span>
+          <strong>9:16 · 30 sec</strong>
+          <p>1080 × 1920 with burned-in captions</p>
+        </article>
+      </section>
+
+      <section class="latest-section">
+        <div class="section-heading">
+          <div><p class="eyebrow">LATEST OUTPUT</p><h2>Last published Reel</h2></div>
+          <button id="refreshButton" class="icon-button" type="button" aria-label="Refresh status">↻</button>
+        </div>
+        <article id="latestCard" class="latest-card empty">
+          <div class="video-poster">
+            <span class="play-mark">▶</span>
+            <span class="poster-label">POSTKINA REEL</span>
+          </div>
+          <div class="latest-copy">
+            <span id="latestDate" class="latest-date">No publication recorded yet</span>
+            <h3 id="latestTitle">Your first automated Reel will appear here.</h3>
+            <p id="latestMeta">The dashboard reads live status from the existing PostKina publisher.</p>
+            <div class="latest-links">
+              <a id="facebookLink" class="text-link hidden" href="#" target="_blank" rel="noopener">Open on Facebook ↗</a>
+              <a id="articleLink" class="text-link hidden" href="#" target="_blank" rel="noopener">Read source story ↗</a>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer><span>© 2026 PostKina</span><span>Existing Page token stays protected inside the publisher Worker.</span></footer>
+  </div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

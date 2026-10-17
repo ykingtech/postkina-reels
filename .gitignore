@@ -3,4 +3,5 @@ build/
 .dev.vars
 .env
 *.log
+api/.wrangler/
 

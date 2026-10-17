@@ -9,21 +9,24 @@ An isolated, zero-cost-first automation for publishing one English Facebook Reel
 - Creates American-English Reel copy with Gemini, with a deterministic fallback if Gemini is unavailable.
 - Renders a 30-second, 1080×1920, H.264/AAC MP4 with FFmpeg and burned-in captions.
 - Uploads the temporary MP4 to the repository's `reels-media` release.
-- Publishes it through Meta's Facebook Reels Publishing API.
+- Sends the hosted MP4 to the existing PostKina publisher Worker, which uses the already-configured Facebook Page token. The token is never copied into this repository.
 - Records the date and source story to prevent duplicates.
+- Serves an admin dashboard from GitHub Pages with manual publishing, live status, the latest Reel, and a countdown to the next scheduled run.
 
 ## Required repository secrets
 
 Open **Settings → Secrets and variables → Actions → New repository secret** and add:
 
-1. `REELS_FACEBOOK_PAGE_ACCESS_TOKEN` — Page access token with permission to create Page content.
-2. `REELS_GEMINI_API_KEY` — a separate Gemini key for Reel copy. This is optional because a safe non-AI fallback is included.
+1. `REELS_GEMINI_API_KEY` — a separate Gemini key used only for Reel copy. A safe non-AI fallback is included.
+2. `REELS_WORKFLOW_SECRET` — an internal machine-to-machine secret shared with the existing publisher Worker. It is not a Facebook token.
 
-After the Facebook token is saved and a manual publish test succeeds, add the repository variable `REELS_ENABLED` with value `true`. Scheduled runs stay safely disabled until this variable exists.
+The existing publisher Worker keeps `FACEBOOK_PAGE_ACCESS_TOKEN`. After a manual publish test succeeds, add the repository variable `REELS_ENABLED` with value `true`. Scheduled runs stay safely disabled until this variable exists.
 
 ## Run manually
 
 Open **Actions → Daily USA Reel → Run workflow**. Manual runs default to `force: true`.
+
+You can also use the GitHub Pages dashboard at `https://ykingtech.github.io/postkina-reels/`. Sign in with the configured PostKina Firebase admin account before using the publish button.
 
 ## Optional API
 

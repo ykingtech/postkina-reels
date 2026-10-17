@@ -8,7 +8,7 @@ const STATE_FILE = path.join(ROOT, "state", "published.json");
 const API_URL = process.env.POSTKINA_API_URL || "https://postkina-facebook-publisher.whatthewithyking.workers.dev/?posts=1&limit=30";
 const TIME_ZONE = process.env.REEL_TIME_ZONE || "America/New_York";
 const TARGET_HOUR = Number(process.env.REEL_TARGET_HOUR || 20);
-const GRAPH_VERSION = process.env.GRAPH_API_VERSION || "v26.0";
+const PUBLISHER_URL = process.env.POSTKINA_PUBLISHER_URL || "https://postkina-facebook-publisher.whatthewithyking.workers.dev/";
 
 function zonedParts(date = new Date()) {
   const parts = new Intl.DateTimeFormat("en-CA", {
@@ -175,39 +175,33 @@ async function prepare() {
 }
 
 async function publish() {
-  const token = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
-  if (!token) throw new Error("FACEBOOK_PAGE_ACCESS_TOKEN is required.");
+  const workflowSecret = process.env.REELS_WORKFLOW_SECRET;
+  if (!workflowSecret) throw new Error("REELS_WORKFLOW_SECRET is required.");
   const videoUrl = process.env.REEL_VIDEO_URL;
   if (!videoUrl) throw new Error("REEL_VIDEO_URL is required.");
   const meta = await readJson(path.join(BUILD, "meta.json"), null);
   if (!meta) throw new Error("build/meta.json was not found.");
-  const startUrl = new URL(`https://graph.facebook.com/${GRAPH_VERSION}/me/video_reels`);
-  startUrl.searchParams.set("access_token", token);
-  startUrl.searchParams.set("upload_phase", "start");
-  const startResponse = await fetch(startUrl, { method: "POST" });
-  if (!startResponse.ok) throw new Error(`Create Reel failed: ${await startResponse.text()}`);
-  const session = await startResponse.json();
-  const uploadResponse = await fetch(session.upload_url, {
+  const response = await fetch(PUBLISHER_URL, {
     method: "POST",
-    headers: { Authorization: `OAuth ${token}`, file_url: videoUrl }
+    headers: { "content-type": "application/json", "X-Workflow-Secret": workflowSecret },
+    body: JSON.stringify({
+      action: "publish_reel",
+      videoUrl,
+      title: meta.post.title,
+      description: `${meta.copy.caption}\n\n${meta.copy.hashtags}\n\nImage: ${meta.post.imageAttribution || "PostKina source"} · ${meta.post.imageLicense || "See article"}`,
+      articleUrl: meta.post.articleUrl,
+      sourcePostId: meta.post.id
+    })
   });
-  if (!uploadResponse.ok) throw new Error(`Upload Reel failed: ${await uploadResponse.text()}`);
-  const finishUrl = new URL(`https://graph.facebook.com/${GRAPH_VERSION}/me/video_reels`);
-  finishUrl.searchParams.set("access_token", token);
-  finishUrl.searchParams.set("video_id", session.video_id);
-  finishUrl.searchParams.set("upload_phase", "finish");
-  finishUrl.searchParams.set("video_state", "PUBLISHED");
-  finishUrl.searchParams.set("title", meta.post.title.slice(0, 100));
-  finishUrl.searchParams.set("description", `${meta.copy.caption}\n\n${meta.copy.hashtags}\n\nImage: ${meta.post.imageAttribution || "PostKina source"} · ${meta.post.imageLicense || "See article"}`);
-  const finishResponse = await fetch(finishUrl, { method: "POST" });
-  if (!finishResponse.ok) throw new Error(`Publish Reel failed: ${await finishResponse.text()}`);
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok || !result.ok) throw new Error(`Publish Reel failed: ${result.error || response.status}`);
   const state = await readJson(STATE_FILE, { publishedDates: {}, publishedPostIds: [] });
   state.publishedDates ||= {};
-  state.publishedDates[meta.date] = { postId: meta.post.id, videoId: session.video_id, publishedAt: new Date().toISOString() };
+  state.publishedDates[meta.date] = { postId: meta.post.id, videoId: result.videoId, facebookUrl: result.facebookUrl, publishedAt: result.publishedAt || new Date().toISOString() };
   state.publishedPostIds = [...new Set([...(state.publishedPostIds || []), meta.post.id])].slice(-180);
   state.lastRun = state.publishedDates[meta.date];
   await writeFile(STATE_FILE, JSON.stringify(state, null, 2) + "\n");
-  console.log(`Published Facebook Reel ${session.video_id}.`);
+  console.log(`Published Facebook Reel ${result.videoId}.`);
 }
 
 const command = process.argv[2];
