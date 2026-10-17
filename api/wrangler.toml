@@ -1,0 +1,10 @@
+name = "postkina-reels-api"
+main = "src/index.js"
+compatibility_date = "2026-10-17"
+
+[vars]
+GITHUB_OWNER = "ykingtech"
+GITHUB_REPO = "postkina-reels"
+GITHUB_WORKFLOW = "daily-reel.yml"
+ALLOWED_ORIGIN = "https://postkina.online"
+

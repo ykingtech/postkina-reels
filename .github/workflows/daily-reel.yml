@@ -1,0 +1,94 @@
+name: Daily USA Reel
+
+on:
+  schedule:
+    - cron: "15 0,1 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Generate even if today's Reel already exists
+        type: boolean
+        default: true
+      publish:
+        description: Publish the generated Reel to Facebook
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-postkina-reel
+  cancel-in-progress: false
+
+jobs:
+  create-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      POSTKINA_API_URL: https://postkina-facebook-publisher.whatthewithyking.workers.dev/?posts=1&limit=30
+      REEL_TIME_ZONE: America/New_York
+      REEL_TARGET_HOUR: "20"
+      GRAPH_API_VERSION: v26.0
+      GEMINI_MODEL: gemini-2.5-flash
+      GEMINI_API_KEY: ${{ secrets.REELS_GEMINI_API_KEY }}
+      FACEBOOK_PAGE_ACCESS_TOKEN: ${{ secrets.REELS_FACEBOOK_PAGE_ACCESS_TOKEN }}
+      FORCE_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.force || 'false' }}
+      ALLOW_PUBLISH: ${{ github.event_name == 'schedule' || inputs.publish }}
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+
+      - name: Install project
+        run: npm ci
+
+      - name: Prepare Reel
+        run: npm run prepare
+
+      - name: Ensure media release exists
+        if: ${{ hashFiles('build/reel.mp4') != '' }}
+        run: gh release view reels-media >/dev/null 2>&1 || gh release create reels-media --title "PostKina Reel Media" --notes "Automated media used by the Facebook Reels publisher."
+
+      - name: Upload Reel media
+        if: ${{ hashFiles('build/reel.mp4') != '' }}
+        id: media
+        shell: bash
+        run: |
+          ASSET_NAME=$(node -p "require('./build/meta.json').assetName")
+          cp build/reel.mp4 "build/${ASSET_NAME}"
+          gh release upload reels-media "build/${ASSET_NAME}" --clobber
+          VIDEO_URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/reels-media/${ASSET_NAME}"
+          echo "video_url=${VIDEO_URL}" >> "$GITHUB_OUTPUT"
+          for attempt in {1..12}; do
+            if curl --fail --location --silent --output /dev/null "$VIDEO_URL"; then exit 0; fi
+            sleep 5
+          done
+          exit 1
+
+      - name: Publish Facebook Reel
+        if: ${{ hashFiles('build/reel.mp4') != '' && env.ALLOW_PUBLISH == 'true' }}
+        env:
+          REEL_VIDEO_URL: ${{ steps.media.outputs.video_url }}
+        run: npm run publish
+
+      - name: Save publishing state
+        if: ${{ hashFiles('build/reel.mp4') != '' && env.ALLOW_PUBLISH == 'true' }}
+        run: |
+          git config user.name "PostKina Reels Bot"
+          git config user.email "lankaknot@gmail.com"
+          git add state/published.json
+          git diff --cached --quiet || git commit -m "Record daily Reel publication"
+          git pull --rebase origin main
+          git push origin main
+

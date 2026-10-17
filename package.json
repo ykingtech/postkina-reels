@@ -1,0 +1,15 @@
+{
+  "name": "postkina-reels",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare": "node src/run.mjs prepare",
+    "publish": "node src/run.mjs publish",
+    "check": "node --check src/run.mjs && node --check api/src/index.js"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
+
