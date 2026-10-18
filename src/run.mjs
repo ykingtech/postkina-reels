@@ -137,8 +137,8 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding
-Style: Hook,DejaVu Sans,62,&H00FFFFFF,&H000000FF,&H60000000,&H00000000,-1,0,0,0,100,100,0,0,1,4,0,2,86,86,190,1
-Style: Body,DejaVu Sans,50,&H00FFFFFF,&H000000FF,&H60000000,&H00000000,-1,0,0,0,100,100,0,0,1,3,0,2,96,96,200,1
+Style: Hook,DejaVu Sans,62,&H00FFFFFF,&H000000FF,&H60000000,&H00000000,-1,0,0,0,100,100,0,0,1,4,0,2,86,86,350,1
+Style: Body,DejaVu Sans,50,&H00FFFFFF,&H000000FF,&H60000000,&H00000000,-1,0,0,0,100,100,0,0,1,3,0,2,96,96,360,1
 Style: Kicker,DejaVu Sans,28,&H0000ADFF,&H000000FF,&H60000000,&H00000000,-1,0,0,0,100,100,1,0,1,2,0,7,350,40,72,1
 
 [Events]
@@ -189,7 +189,7 @@ function renderVideo(imageFile, narrationFile) {
     "[bgsrc]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=32:16,eq=brightness=-0.20:saturation=0.72[bg]",
     "[photosrc]scale=980:1020:force_original_aspect_ratio=decrease[photo]",
     "[bg][photo]overlay=(W-w)/2:235[base]",
-    "[base]drawbox=x=0:y=0:w=iw:h=188:color=0x0f1d2a@0.96:t=fill,drawbox=x=0:y=1260:w=iw:h=660:color=0x0f1d2a@0.94:t=fill[panel]",
+    "[base]drawbox=x=0:y=0:w=iw:h=188:color=0x0f1d2a@0.96:t=fill,drawbox=x=0:y=1260:w=iw:h=660:color=0x0f1d2a@0.94:t=fill,drawbox=x=28:y=22:w=300:h=124:color=white@1:t=fill[panel]",
     "[1:v]scale=235:-1[logo]",
     "[panel][logo]overlay=46:38[brand]",
     "[brand]drawbox=x=46:y=151:w=220:h=5:color=0xffad00@1:t=fill[accent]",
