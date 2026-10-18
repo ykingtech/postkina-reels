@@ -7,7 +7,8 @@ An isolated, zero-cost-first automation for publishing one English Facebook Reel
 - Runs at 8:00 PM `America/New_York` (the workflow checks both possible UTC hours for daylight-saving time).
 - Selects an unused PostKina article, prioritising US-related stories.
 - Creates American-English Reel copy with Gemini, with a deterministic fallback if Gemini is unavailable.
-- Renders a 30-second, 1080×1920, H.264/AAC MP4 with FFmpeg and burned-in captions.
+- Renders a 30-second, 1080×1920, H.264/AAC MP4 with a safe-area layout and burned-in captions.
+- Adds a natural Gemini news voice when available and mixes it over a quiet, code-generated original music bed.
 - Uploads the temporary MP4 to the repository's `reels-media` release.
 - Sends the hosted MP4 to the existing PostKina publisher Worker, which uses the already-configured Facebook Page token. The token is never copied into this repository.
 - Records the date and source story to prevent duplicates.
@@ -49,4 +50,4 @@ Never commit access tokens or API keys.
 
 ## Copyright and accuracy
 
-The workflow uses the article image and preserves its credit/licence in the Facebook description. Source facts are limited to the published PostKina title and excerpt. Review licences and output periodically, especially before monetisation.
+The workflow uses the article image and preserves its credit/licence in the Facebook description. The background music is synthesized by this project's FFmpeg filter and contains no third-party song, recording, or sample. Source facts are limited to the published PostKina title and excerpt. Review image licences and output periodically, especially before monetisation.
