@@ -11,18 +11,25 @@
       "videoId": "936015902645875",
       "facebookUrl": "https://www.facebook.com/reel/936015902645875",
       "publishedAt": "2026-10-18T10:27:55.611Z"
+    },
+    "2026-10-19": {
+      "postId": "postkina-ai-1792389854746",
+      "videoId": "2850181052022137",
+      "facebookUrl": "https://www.facebook.com/reel/2850181052022137",
+      "publishedAt": "2026-10-19T12:21:04.928Z"
     }
   },
   "publishedPostIds": [
     "postkina-ai-1792216908711",
     "postkina-ai-1792166558262",
     "postkina-ai-1792252960578",
-    "postkina-ai-1792303416708"
+    "postkina-ai-1792303416708",
+    "postkina-ai-1792389854746"
   ],
   "lastRun": {
-    "postId": "postkina-ai-1792303416708",
-    "videoId": "936015902645875",
-    "facebookUrl": "https://www.facebook.com/reel/936015902645875",
-    "publishedAt": "2026-10-18T10:27:55.611Z"
+    "postId": "postkina-ai-1792389854746",
+    "videoId": "2850181052022137",
+    "facebookUrl": "https://www.facebook.com/reel/2850181052022137",
+    "publishedAt": "2026-10-19T12:21:04.928Z"
   }
 }
